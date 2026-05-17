@@ -267,13 +267,15 @@ export default function PacientesPage() {
             </div>
           </div>
           
-          <div className="p-4 border-t border-gray-200 shrink-0">
+          <div className="p-4 border-t border-gray-200 shrink-0 bg-white pb-8 md:pb-4">
             <button 
               onClick={() => router.push(`/pacientes/${pacienteSeleccionado.id}/historia`)}
-              className="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition-colors shadow-sm active:scale-95"
+              className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 active:scale-95 flex items-center justify-center gap-2"
             >
               Nueva Historia Clínica
             </button>
+            {/* Espaciador para móviles para evitar el BottomNav */}
+            <div className="h-16 md:hidden" />
           </div>
         </div>
       )}
