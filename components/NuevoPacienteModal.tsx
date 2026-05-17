@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { X, User, Phone, CreditCard, AlertTriangle, Loader2 } from 'lucide-react'
+import { X, User, Phone, CreditCard, AlertTriangle, Loader2, Mail } from 'lucide-react'
 
 type Props = {
   isOpen: boolean
@@ -15,6 +15,7 @@ export default function NuevoPacienteModal({ isOpen, onClose, onSuccess }: Props
   const [formData, setFormData] = useState({
     nombre: '',
     telefono: '',
+    email: '',
     obra_social: '',
     alertas: ''
   })
@@ -26,13 +27,17 @@ export default function NuevoPacienteModal({ isOpen, onClose, onSuccess }: Props
     setLoading(true)
 
     try {
+      const { data: { user } } = await supabase.auth.getUser()
+      
       const { error } = await supabase
         .from('pacientes')
         .insert([{
           nombre: formData.nombre,
           telefono: formData.telefono,
+          email: formData.email || null,
           obra_social: formData.obra_social || null,
-          alertas: formData.alertas || null
+          alertas: formData.alertas || null,
+          user_id: user?.id
         }])
 
       if (error) throw error
@@ -48,7 +53,7 @@ export default function NuevoPacienteModal({ isOpen, onClose, onSuccess }: Props
   }
 
   function handleClose() {
-    setFormData({ nombre: '', telefono: '', obra_social: '', alertas: '' })
+    setFormData({ nombre: '', telefono: '', email: '', obra_social: '', alertas: '' })
     onClose()
   }
 
@@ -93,6 +98,22 @@ export default function NuevoPacienteModal({ isOpen, onClose, onSuccess }: Props
                   value={formData.telefono}
                   onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
                   placeholder="Sin espacios ni guiones"
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-1.5 ml-1">
+                Correo Electrónico
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="ejemplo@correo.com"
                   className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 />
               </div>

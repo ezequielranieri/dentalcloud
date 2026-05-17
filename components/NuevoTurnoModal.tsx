@@ -61,6 +61,7 @@ export default function NuevoTurnoModal({ isOpen, onClose, onSuccess, initialDat
     setLoading(true)
 
     try {
+      const { data: { user } } = await supabase.auth.getUser()
       let pacienteId = pacienteSeleccionado?.id
 
       // 1. Si es un paciente nuevo, primero lo creamos
@@ -71,7 +72,8 @@ export default function NuevoTurnoModal({ isOpen, onClose, onSuccess, initialDat
             nombre: nuevoPacienteData.nombre,
             telefono: nuevoPacienteData.telefono,
             obra_social: nuevoPacienteData.obra_social || null,
-            alertas: nuevoPacienteData.alertas || null
+            alertas: nuevoPacienteData.alertas || null,
+            user_id: user?.id
           }])
           .select()
           .single()
@@ -90,7 +92,8 @@ export default function NuevoTurnoModal({ isOpen, onClose, onSuccess, initialDat
           paciente_id: pacienteId,
           fecha_hora: fechaHora,
           motivo: formData.motivo,
-          estado: 'pendiente'
+          estado: 'pendiente',
+          user_id: user?.id
         }])
 
       if (tError) throw tError

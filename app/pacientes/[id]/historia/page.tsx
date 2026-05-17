@@ -77,6 +77,8 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
     setSaving(true);
     setSuccess(false);
 
+    const { data: { user } } = await supabase.auth.getUser();
+
     // Combinamos descripción y tratamiento para el campo 'descripcion' de la DB
     // o podríamos guardarlo estructurado si la DB lo permitiera. 
     // Según el GEMINI.md, usamos 'descripcion'.
@@ -88,7 +90,8 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
         paciente_id: id,
         fecha,
         descripcion: fullDescription,
-        odontograma_json: odontograma
+        odontograma_json: odontograma,
+        user_id: user?.id
       });
 
     if (error) {

@@ -12,8 +12,10 @@ export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 // Tipos globales del dominio
 export type Paciente = {
   id: string;
+  user_id: string;
   nombre: string;
   telefono: string;
+  email?: string;
   obra_social?: string;
   alertas?: string;
   created_at: string;
@@ -21,6 +23,7 @@ export type Paciente = {
 
 export type Turno = {
   id: string;
+  user_id: string;
   paciente_id: string;
   fecha_hora: string;
   motivo: string;
@@ -31,6 +34,7 @@ export type Turno = {
 
 export type HistoriaClinica = {
   id: string;
+  user_id: string;
   paciente_id: string;
   fecha: string;
   descripcion: string;

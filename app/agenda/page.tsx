@@ -32,6 +32,31 @@ export default function AgendaPage() {
   const [menuAbiertoId, setMenuAbiertoId] = useState<string | null>(null)
   const [editandoId, setEditandoId] = useState<string | null>(null)
   const [reprogramandoId, setReprogramandoId] = useState<string | null>(null)
+
+  // Funciones para abrir menús exclusivamente
+  const abrirMenu = (id: string | null) => {
+    setMenuAbiertoId(id)
+    if (id) {
+      setEditandoId(null)
+      setReprogramandoId(null)
+    }
+  }
+
+  const abrirEdicion = (id: string | null) => {
+    setEditandoId(id)
+    if (id) {
+      setMenuAbiertoId(null)
+      setReprogramandoId(null)
+    }
+  }
+
+  const abrirReprogramacion = (id: string | null) => {
+    setReprogramandoId(id)
+    if (id) {
+      setMenuAbiertoId(null)
+      setEditandoId(null)
+    }
+  }
   const [notificacion, setNotificacion] = useState<{
     isOpen: boolean;
     paciente: { nombre: string; telefono: string; email?: string };
@@ -190,16 +215,40 @@ export default function AgendaPage() {
       <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between shrink-0">
         <button 
           onClick={() => setFecha(new Date(fecha.setDate(fecha.getDate() - 1)))} 
-          className="p-1 hover:bg-gray-100 rounded-md"
+          className="p-1 hover:bg-gray-100 rounded-md transition-colors"
         >
           <ChevronLeft size={20} className="text-gray-600" />
         </button>
-        <span className="text-sm font-medium text-gray-900 capitalize">
-          {fecha.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
-        </span>
+        
+        <div className="relative">
+          <button 
+            onClick={() => (document.getElementById('agenda-datepicker') as HTMLInputElement)?.showPicker()}
+            className="flex items-center gap-2 px-3 py-1.5 hover:bg-blue-50 rounded-lg transition-colors group"
+          >
+            <CalendarIcon size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
+            <span className="text-sm font-semibold text-gray-900 capitalize">
+              {fecha.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </span>
+          </button>
+          <input
+            id="agenda-datepicker"
+            type="date"
+            className="absolute inset-0 opacity-0 pointer-events-none"
+            value={fecha.toISOString().split('T')[0]}
+            onChange={(e) => {
+              if (e.target.value) {
+                const [year, month, day] = e.target.value.split('-').map(Number)
+                const newDate = new Date(fecha)
+                newDate.setFullYear(year, month - 1, day)
+                setFecha(newDate)
+              }
+            }}
+          />
+        </div>
+
         <button 
           onClick={() => setFecha(new Date(fecha.setDate(fecha.getDate() + 1)))} 
-          className="p-1 hover:bg-gray-100 rounded-md"
+          className="p-1 hover:bg-gray-100 rounded-md transition-colors"
         >
           <ChevronRight size={20} className="text-gray-600" />
         </button>
@@ -248,7 +297,7 @@ export default function AgendaPage() {
                   </div>
                   <div className="relative">
                     <button 
-                      onClick={() => setMenuAbiertoId(isMenuOpen ? null : turno.id)}
+                      onClick={() => abrirMenu(isMenuOpen ? null : turno.id)}
                       className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                     >
                       <MoreVertical size={18} />
@@ -258,9 +307,8 @@ export default function AgendaPage() {
                       <div className="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-40 py-1 animate-in fade-in zoom-in duration-150">
                         <button 
                           onClick={() => {
-                            setEditandoId(turno.id)
+                            abrirEdicion(turno.id)
                             setEditMotivo(turno.motivo)
-                            setMenuAbiertoId(null)
                           }}
                           className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         >
@@ -269,10 +317,9 @@ export default function AgendaPage() {
                         </button>
                         <button 
                           onClick={() => {
-                            setReprogramandoId(turno.id)
+                            abrirReprogramacion(turno.id)
                             setEditFecha(new Date(turno.fecha_hora).toISOString().split('T')[0])
                             setEditHora(new Date(turno.fecha_hora).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }))
-                            setMenuAbiertoId(null)
                           }}
                           className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         >
