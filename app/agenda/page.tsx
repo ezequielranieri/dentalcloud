@@ -207,7 +207,10 @@ export default function AgendaPage() {
           <h1 className="text-lg font-semibold text-gray-900 tracking-tight">Agenda</h1>
         </Link>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setIsModalOpen(true)
+            setIsCalendarOpen(false)
+          }}
           className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-colors shadow-sm active:scale-95"
         >
           <Plus size={20} />
