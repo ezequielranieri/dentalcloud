@@ -18,11 +18,8 @@ export const metadata: Metadata = {
   title: "DentalCloud Manager",
   description: "Gestión Odontológica Eficiente",
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/icon.svg",
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
   },
 };
 
