@@ -199,7 +199,7 @@ export default function AgendaPage() {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden bg-gray-50">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm">
         <Link href="/agenda" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -284,7 +284,7 @@ export default function AgendaPage() {
       </div>
 
       {/* Turnos List */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-24">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-40">
         {loading ? (
           <div className="flex justify-center py-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>

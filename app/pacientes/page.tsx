@@ -116,7 +116,7 @@ export default function PacientesPage() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-2 pb-24 md:pb-6">
+        <div className="flex-1 overflow-y-auto p-4 space-y-2 pb-36 md:pb-6">
           {loading ? (
             <div className="flex justify-center py-10">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>

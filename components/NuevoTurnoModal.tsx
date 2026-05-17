@@ -302,18 +302,18 @@ export default function NuevoTurnoModal({ isOpen, onClose, onSuccess, initialDat
             </div>
           </div>
 
-          <div className="pt-2 flex gap-3 shrink-0">
+          <div className="pt-4 flex gap-3 shrink-0 pb-2">
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+              className="flex-1 px-4 py-3 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading || (!pacienteSeleccionado && !showNuevoPacienteForm)}
-              className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-3 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all shadow-md shadow-blue-100"
             >
               {loading ? 'Guardando...' : 'Confirmar Turno'}
             </button>

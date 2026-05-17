@@ -59,7 +59,7 @@ export default function NuevoPacienteModal({ isOpen, onClose, onSuccess }: Props
 
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/40 p-0 md:p-4">
-      <div className="bg-white w-full max-w-md rounded-t-2xl md:rounded-xl shadow-xl overflow-hidden animate-in slide-in-from-bottom duration-200 flex flex-col">
+      <div className="bg-white w-full max-w-md rounded-t-2xl md:rounded-xl shadow-xl overflow-hidden animate-in slide-in-from-bottom duration-200 flex flex-col max-h-[90vh]">
         <div className="flex items-center justify-between p-4 border-b border-gray-100 shrink-0">
           <h2 className="text-lg font-semibold text-gray-900">Nuevo Paciente</h2>
           <button onClick={handleClose} className="p-1 hover:bg-gray-100 rounded-full text-gray-400">
@@ -67,7 +67,7 @@ export default function NuevoPacienteModal({ isOpen, onClose, onSuccess }: Props
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto">
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-1.5 ml-1">
@@ -151,18 +151,18 @@ export default function NuevoPacienteModal({ isOpen, onClose, onSuccess }: Props
             </div>
           </div>
 
-          <div className="pt-2 flex gap-3">
+          <div className="pt-2 flex gap-3 pb-2">
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all"
+              className="flex-1 px-4 py-3 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2 shadow-md shadow-blue-100"
+              className="flex-1 px-4 py-3 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2 shadow-md shadow-blue-100 active:scale-95 transition-all"
             >
               {loading ? (
                 <>

@@ -116,7 +116,7 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 pb-safe">
+    <div className="flex flex-col h-full bg-gray-50 overflow-hidden">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
         <button 
@@ -155,7 +155,7 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
         </button>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-24">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-40">
         <form id="historia-form" onSubmit={handleSave} className="max-w-4xl mx-auto space-y-8">
           
           {/* Formulario de Sesión */}
