@@ -10,7 +10,8 @@ import {
   FileText, 
   Stethoscope,
   Activity,
-  CheckCircle2
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
 import Odontograma, { type EstadoDiente } from '@/components/Odontograma';
 
