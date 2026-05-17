@@ -232,6 +232,9 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
               <strong>Tip:</strong> El odontograma muestra el último estado registrado. Los cambios se guardarán como una nueva sesión.
             </p>
           </div>
+          
+          {/* Espaciador para evitar que el BottomNav tape el contenido */}
+          <div className="h-32 md:hidden shrink-0" />
         </form>
       </div>
     </div>

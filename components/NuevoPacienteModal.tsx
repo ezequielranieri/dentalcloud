@@ -58,7 +58,7 @@ export default function NuevoPacienteModal({ isOpen, onClose, onSuccess }: Props
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/40 p-0 md:p-4">
+    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-black/40 p-0 md:p-4">
       <div className="bg-white w-full max-w-md rounded-t-2xl md:rounded-xl shadow-xl overflow-hidden animate-in slide-in-from-bottom duration-200 flex flex-col max-h-[90vh]">
         <div className="flex items-center justify-between p-4 border-b border-gray-100 shrink-0">
           <h2 className="text-lg font-semibold text-gray-900">Nuevo Paciente</h2>

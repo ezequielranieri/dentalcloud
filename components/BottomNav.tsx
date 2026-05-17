@@ -15,7 +15,7 @@ export default function BottomNav() {
   if (pathname === '/login') return null;
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 flex flex-col z-50">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 flex flex-col z-40">
       <div className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);

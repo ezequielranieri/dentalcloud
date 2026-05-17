@@ -460,6 +460,9 @@ export default function AgendaPage() {
             )
           })
         )}
+        
+        {/* Espaciador para evitar que el BottomNav tape el contenido */}
+        <div className="h-28 md:hidden shrink-0" />
       </div>
     </div>
   )

@@ -22,7 +22,7 @@ export default function NotificacionModal({ isOpen, onClose, paciente, mensaje, 
   const mailLink = generarLinkEmail(paciente.email || '', titulo, mensaje)
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
+    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/40 p-4">
       <div className="bg-white w-full max-w-sm rounded-xl shadow-xl overflow-hidden animate-in zoom-in duration-200">
         <div className="p-6">
           <div className="flex justify-between items-start mb-4">
