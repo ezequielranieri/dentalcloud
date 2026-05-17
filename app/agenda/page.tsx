@@ -25,7 +25,7 @@ import NotificacionModal from '@/components/NotificacionModal'
 export default function AgendaPage() {
   const [turnos, setTurnos] = useState<(Turno & { pacientes: Paciente })[]>([])
   const [loading, setLoading] = useState(true)
-  const [fecha, setFecha] = useState(new Date('2026-05-15T12:00:00')) // Forzamos la fecha del seed para ver los datos
+  const [fecha, setFecha] = useState(new Date())
   const [isModalOpen, setIsModalOpen] = useState(false)
   
   // Estados para el menú y acciones
