@@ -21,12 +21,15 @@ import BotonWhatsApp from '@/components/BotonWhatsApp'
 import { plantillas } from '@/lib/whatsapp'
 import NuevoTurnoModal from '@/components/NuevoTurnoModal'
 import NotificacionModal from '@/components/NotificacionModal'
+import Calendar from '@/components/Calendar'
 
 export default function AgendaPage() {
   const [turnos, setTurnos] = useState<(Turno & { pacientes: Paciente })[]>([])
   const [loading, setLoading] = useState(true)
   const [fecha, setFecha] = useState(new Date())
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const [diasConTurnos, setDiasConTurnos] = useState<string[]>([])
   
   // Estados para el menú y acciones
   const [menuAbiertoId, setMenuAbiertoId] = useState<string | null>(null)
@@ -70,6 +73,7 @@ export default function AgendaPage() {
 
   useEffect(() => {
     fetchTurnos()
+    fetchDiasConTurnos()
   }, [fecha])
 
   async function fetchTurnos() {
@@ -89,6 +93,22 @@ export default function AgendaPage() {
     if (error) console.error('Error:', error)
     if (data) setTurnos(data as unknown as (Turno & { pacientes: Paciente })[])
     setLoading(false)
+  }
+
+  async function fetchDiasConTurnos() {
+    const startOfMonth = new Date(fecha.getFullYear(), fecha.getMonth(), 1)
+    const endOfMonth = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0, 23, 59, 59)
+
+    const { data } = await supabase
+      .from('turnos')
+      .select('fecha_hora')
+      .gte('fecha_hora', startOfMonth.toISOString())
+      .lte('fecha_hora', endOfMonth.toISOString())
+
+    if (data) {
+      const dates = data.map(t => new Date(t.fecha_hora).toLocaleDateString('en-CA')) // en-CA gives YYYY-MM-DD
+      setDiasConTurnos(Array.from(new Set(dates)))
+    }
   }
 
   async function updateTurno(id: string, updates: Partial<Turno>) {
@@ -212,7 +232,7 @@ export default function AgendaPage() {
       )}
 
       {/* Date Selector */}
-      <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between shrink-0">
+      <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between shrink-0 relative">
         <button 
           onClick={() => setFecha(new Date(fecha.setDate(fecha.getDate() - 1)))} 
           className="p-1 hover:bg-gray-100 rounded-md transition-colors"
@@ -222,28 +242,34 @@ export default function AgendaPage() {
         
         <div className="relative">
           <button 
-            onClick={() => (document.getElementById('agenda-datepicker') as HTMLInputElement)?.showPicker()}
-            className="flex items-center gap-2 px-3 py-1.5 hover:bg-blue-50 rounded-lg transition-colors group"
+            onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+            className={`
+              flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all group
+              ${isCalendarOpen ? 'bg-blue-600 text-white shadow-md' : 'hover:bg-blue-50 text-gray-900'}
+            `}
           >
-            <CalendarIcon size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
-            <span className="text-sm font-semibold text-gray-900 capitalize">
+            <CalendarIcon size={16} className={`${isCalendarOpen ? 'text-white' : 'text-blue-600'} group-hover:scale-110 transition-transform`} />
+            <span className="text-sm font-semibold capitalize">
               {fecha.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </span>
           </button>
-          <input
-            id="agenda-datepicker"
-            type="date"
-            className="absolute inset-0 opacity-0 pointer-events-none"
-            value={fecha.toISOString().split('T')[0]}
-            onChange={(e) => {
-              if (e.target.value) {
-                const [year, month, day] = e.target.value.split('-').map(Number)
-                const newDate = new Date(fecha)
-                newDate.setFullYear(year, month - 1, day)
-                setFecha(newDate)
-              }
-            }}
-          />
+          
+          {isCalendarOpen && (
+            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-50">
+              <div 
+                className="fixed inset-0 z-[-1]" 
+                onClick={() => setIsCalendarOpen(false)}
+              />
+              <Calendar 
+                selectedDate={fecha}
+                onSelect={(newDate) => {
+                  setFecha(newDate)
+                  setIsCalendarOpen(false)
+                }}
+                markedDates={diasConTurnos}
+              />
+            </div>
+          )}
         </div>
 
         <button 
