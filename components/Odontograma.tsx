@@ -166,9 +166,22 @@ export default function Odontograma({ valor, onChange, readOnly = false }: Odont
           {ESTADOS.map(e => (
             <div key={e.value} className="flex items-center gap-2.5">
               <div 
-                className="w-4 h-4 rounded-md border shadow-xs" 
-                style={{ backgroundColor: e.color, borderColor: e.stroke }}
-              />
+                className="w-5 h-5 rounded-md border border-gray-200 shadow-xs flex items-center justify-center bg-white relative"
+              >
+                {(e.value === 'extracción' || e.value === 'ausente') ? (
+                  <svg viewBox="0 0 40 40" className="w-full h-full">
+                    <g stroke={e.value === 'extracción' ? '#3B82F6' : '#EF4444'} strokeWidth="4" strokeLinecap="round">
+                      <line x1="8" y1="8" x2="32" y2="32" />
+                      <line x1="32" y1="8" x2="8" y2="32" />
+                    </g>
+                  </svg>
+                ) : (
+                  <div 
+                    className="absolute inset-1 rounded-sm" 
+                    style={{ backgroundColor: e.color }}
+                  />
+                )}
+              </div>
               <span className="text-xs text-gray-600 font-bold">{e.label}</span>
             </div>
           ))}
