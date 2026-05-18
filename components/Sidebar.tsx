@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Calendar, Users, Activity, LogOut, Code } from 'lucide-react';
+import { Calendar, Users, Activity, LogOut, Code, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { resetDemoData } from '@/lib/demo';
 
 import { useState, useEffect } from 'react';
 
@@ -15,12 +16,14 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<{ email?: string; name?: string } | null>(null);
+  const [user, setUser] = useState<{ id: string; email?: string; name?: string } | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user: supabaseUser } }) => {
       if (supabaseUser) {
         setUser({
+          id: supabaseUser.id,
           email: supabaseUser.email,
           name: supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0]
         });
@@ -30,14 +33,21 @@ export default function Sidebar() {
 
   async function handleLogout() {
     try {
+      setIsLoggingOut(true);
+
+      // Si es el usuario demo, reseteamos sus datos antes de salir
+      if (user?.email === 'demo@dentalcloud.com') {
+        await resetDemoData(user.id);
+      }
+
       await supabase.auth.signOut();
-      // Limpiar cualquier estado local si fuera necesario
       router.push('/login');
       router.refresh();
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
-      // Forzar redirección incluso si hay error
       window.location.href = '/login';
+    } finally {
+      setIsLoggingOut(false);
     }
   }
 
@@ -97,10 +107,11 @@ export default function Sidebar() {
         
         <button 
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+          disabled={isLoggingOut}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors duration-150 disabled:opacity-50"
         >
-          <LogOut size={18} />
-          Cerrar sesión
+          {isLoggingOut ? <Loader2 className="animate-spin" size={18} /> : <LogOut size={18} />}
+          {isLoggingOut ? 'Cerrando sesión...' : 'Cerrar sesión'}
         </button>
       </div>
 

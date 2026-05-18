@@ -1,8 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Calendar, Users, Code } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Calendar, Users, Code, LogOut, Loader2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { resetDemoData } from '@/lib/demo';
+import { useState, useEffect } from 'react';
 
 const navItems = [
   { name: 'Agenda', href: '/agenda', icon: Calendar },
@@ -11,6 +14,34 @@ const navItems = [
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user: supabaseUser } }) => {
+      if (supabaseUser) {
+        setUser({ id: supabaseUser.id, email: supabaseUser.email });
+      }
+    });
+  }, []);
+
+  async function handleLogout() {
+    try {
+      setIsLoggingOut(true);
+      if (user?.email === 'demo@dentalcloud.com') {
+        await resetDemoData(user.id);
+      }
+      await supabase.auth.signOut();
+      router.push('/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      window.location.href = '/login';
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }
 
   if (pathname === '/login') return null;
 
@@ -37,6 +68,15 @@ export default function BottomNav() {
             </Link>
           );
         })}
+        
+        <button
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="flex flex-col items-center justify-center flex-1 h-full gap-1 text-red-500 active:bg-red-50 transition-colors disabled:opacity-50"
+        >
+          {isLoggingOut ? <Loader2 className="animate-spin" size={20} /> : <LogOut size={20} />}
+          <span className="text-[10px] font-medium uppercase tracking-wider">Salir</span>
+        </button>
       </div>
       
       <div className="flex justify-center pb-2 pt-0.5">
