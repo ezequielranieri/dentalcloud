@@ -30,7 +30,7 @@ export default function BottomNav() {
     try {
       setIsLoggingOut(true);
       if (user?.email === 'demo@dentalcloud.com') {
-        await resetDemoData(user.id);
+        await supabase.rpc('reset_demo_data');
       }
       await supabase.auth.signOut();
       router.push('/login');

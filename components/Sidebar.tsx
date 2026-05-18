@@ -35,9 +35,9 @@ export default function Sidebar() {
     try {
       setIsLoggingOut(true);
 
-      // Si es el usuario demo, reseteamos sus datos antes de salir
+      // Si es el usuario demo, llamamos a la función RPC para resetear datos
       if (user?.email === 'demo@dentalcloud.com') {
-        await resetDemoData(user.id);
+        await supabase.rpc('reset_demo_data');
       }
 
       await supabase.auth.signOut();
