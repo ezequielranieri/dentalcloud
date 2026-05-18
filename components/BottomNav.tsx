@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Calendar, Users, Code, LogOut, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { resetDemoData } from '@/lib/demo';
 import { useState, useEffect } from 'react';
 
 const navItems = [
