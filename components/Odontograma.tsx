@@ -107,8 +107,9 @@ export default function Odontograma({ valor, onChange, readOnly = false }: Odont
     const nextIndex = (currentIndex + 1) % ESTADOS.length;
     const nuevoEstado = ESTADOS[nextIndex].value;
 
-    // Si el nuevo estado es extracción o ausente, aplicamos a todas las superficies
-    if (nuevoEstado === 'extracción' || nuevoEstado === 'ausente') {
+    // Si el nuevo estado es extracción o ausente, O si el estado actual era uno de ellos,
+    // aplicamos el cambio a todas las superficies del diente para que el cambio sea global.
+    if (nuevoEstado === 'extracción' || nuevoEstado === 'ausente' || estadoActual === 'extracción' || estadoActual === 'ausente') {
       onChange(num, {
         oclusal: nuevoEstado,
         vestibular: nuevoEstado,
