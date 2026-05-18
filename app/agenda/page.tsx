@@ -15,10 +15,12 @@ import {
   CalendarDays,
   XCircle,
   Save,
-  X as XIcon
+  X as XIcon,
+  Mail as MailIcon,
+  MessageSquare
 } from 'lucide-react'
 import BotonWhatsApp from '@/components/BotonWhatsApp'
-import { plantillas } from '@/lib/whatsapp'
+import { plantillas, generarLinkEmail } from '@/lib/whatsapp'
 import NuevoTurnoModal from '@/components/NuevoTurnoModal'
 import NotificacionModal from '@/components/NotificacionModal'
 import Calendar from '@/components/Calendar'
@@ -355,6 +357,26 @@ export default function AgendaPage() {
                           <CalendarDays size={16} className="text-gray-400" />
                           Reprogramar
                         </button>
+                        
+                        {turno.pacientes.email && (
+                          <a 
+                            href={generarLinkEmail(
+                              turno.pacientes.email, 
+                              `Recordatorio de Turno - ${turno.pacientes.nombre}`,
+                              plantillas.recordatorio({
+                                paciente_nombre: turno.pacientes.nombre,
+                                paciente_telefono: turno.pacientes.telefono,
+                                fecha_hora: `${hora} hs`,
+                                motivo: turno.motivo
+                              })
+                            )}
+                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50"
+                          >
+                            <MailIcon size={16} className="text-blue-400" />
+                            Avisar por Email
+                          </a>
+                        )}
+
                         <div className="border-t border-gray-100 my-1" />
                         <button 
                           onClick={() => handleCancelar(turno)}
