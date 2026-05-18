@@ -10,7 +10,7 @@ const DIENTES_INFERIORES = [
   48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38
 ];
 
-export type EstadoSuperficie = 'sano' | 'caries' | 'corona' | 'extracción' | 'tratamiento';
+export type EstadoSuperficie = 'sano' | 'caries' | 'tratamiento' | 'extracción' | 'ausente';
 export type SuperficiesDiente = {
   oclusal: EstadoSuperficie;
   vestibular: EstadoSuperficie;
@@ -27,10 +27,10 @@ interface OdontogramaProps {
 
 const ESTADOS: { label: string; value: EstadoSuperficie; color: string; stroke: string }[] = [
   { label: 'Sano', value: 'sano', color: '#FFFFFF', stroke: '#D1D5DB' },
-  { label: 'Caries', value: 'caries', color: '#EF4444', stroke: '#B91C1C' },
-  { label: 'Corona', value: 'corona', color: '#3B82F6', stroke: '#1D4ED8' },
-  { label: 'Extracción', value: 'extracción', color: '#1F2937', stroke: '#111827' },
-  { label: 'Tratamiento', value: 'tratamiento', color: '#22C55E', stroke: '#15803D' },
+  { label: 'Caries', value: 'caries', color: '#3B82F6', stroke: '#1D4ED8' }, // Azul
+  { label: 'Tratamiento', value: 'tratamiento', color: '#EF4444', stroke: '#B91C1C' }, // Rojo
+  { label: 'Extracción', value: 'extracción', color: '#3B82F6', stroke: '#1D4ED8' }, // Azul (Cruz)
+  { label: 'Ausente', value: 'ausente', color: '#EF4444', stroke: '#B91C1C' }, // Rojo (Cruz)
 ];
 
 const ToothSVG = ({ 
@@ -42,11 +42,16 @@ const ToothSVG = ({
   onSurfaceClick: (s: keyof SuperficiesDiente) => void;
   readOnly: boolean;
 }) => {
-  const getColor = (estado?: EstadoSuperficie) => 
-    ESTADOS.find(e => e.value === (estado || 'sano'))?.color || '#FFFFFF';
+  const getColor = (estado?: EstadoSuperficie) => {
+    if (estado === 'extracción' || estado === 'ausente') return '#FFFFFF';
+    return ESTADOS.find(e => e.value === (estado || 'sano'))?.color || '#FFFFFF';
+  };
   
   const getStroke = (estado?: EstadoSuperficie) => 
     ESTADOS.find(e => e.value === (estado || 'sano'))?.stroke || '#D1D5DB';
+
+  const isFullTooth = superficies.oclusal === 'extracción' || superficies.oclusal === 'ausente';
+  const fullToothColor = superficies.oclusal === 'extracción' ? '#3B82F6' : '#EF4444';
 
   const renderSurface = (name: keyof SuperficiesDiente, d: string) => {
     const estado = superficies[name] || 'sano';
@@ -63,7 +68,7 @@ const ToothSVG = ({
   };
 
   return (
-    <svg viewBox="0 0 40 40" className="w-10 h-10 md:w-12 md:h-12 drop-shadow-sm">
+    <svg viewBox="0 0 40 40" className="w-10 h-10 md:w-12 md:h-12 drop-shadow-sm overflow-visible">
       {/* Vestibular (Top) */}
       {renderSurface('vestibular', 'M 0 0 L 40 0 L 28 12 L 12 12 Z')}
       {/* Distal (Right) */}
@@ -74,6 +79,14 @@ const ToothSVG = ({
       {renderSurface('mesial', 'M 0 0 L 12 12 L 12 28 L 0 40 Z')}
       {/* Oclusal (Center) */}
       {renderSurface('oclusal', 'M 12 12 L 28 12 L 28 28 L 12 28 Z')}
+
+      {/* Cruz para Extracción o Ausente */}
+      {isFullTooth && (
+        <g stroke={fullToothColor} strokeWidth="3" strokeLinecap="round" className="pointer-events-none">
+          <line x1="0" y1="0" x2="40" y2="40" />
+          <line x1="40" y1="0" x2="0" y2="40" />
+        </g>
+      )}
     </svg>
   );
 };
@@ -94,10 +107,21 @@ export default function Odontograma({ valor, onChange, readOnly = false }: Odont
     const nextIndex = (currentIndex + 1) % ESTADOS.length;
     const nuevoEstado = ESTADOS[nextIndex].value;
 
-    onChange(num, {
-      ...dienteActual,
-      [surface]: nuevoEstado
-    });
+    // Si el nuevo estado es extracción o ausente, aplicamos a todas las superficies
+    if (nuevoEstado === 'extracción' || nuevoEstado === 'ausente') {
+      onChange(num, {
+        oclusal: nuevoEstado,
+        vestibular: nuevoEstado,
+        lingual: nuevoEstado,
+        mesial: nuevoEstado,
+        distal: nuevoEstado
+      });
+    } else {
+      onChange(num, {
+        ...dienteActual,
+        [surface]: nuevoEstado
+      });
+    }
   };
 
   const renderDiente = (num: number) => {
