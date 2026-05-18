@@ -13,7 +13,7 @@ import {
   CheckCircle2,
   Loader2
 } from 'lucide-react';
-import Odontograma, { type EstadoDiente } from '@/components/Odontograma';
+import Odontograma, { type SuperficiesDiente } from '@/components/Odontograma';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -32,7 +32,7 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
   const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
   const [descripcion, setDescripcion] = useState('');
   const [tratamiento, setTratamiento] = useState('');
-  const [odontograma, setOdontograma] = useState<Record<number, EstadoDiente>>({});
+  const [odontograma, setOdontograma] = useState<Record<number, Partial<SuperficiesDiente>>>({});
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -56,7 +56,7 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
       .single();
 
     if (hData?.odontograma_json) {
-      setOdontograma(hData.odontograma_json as Record<number, EstadoDiente>);
+      setOdontograma(hData.odontograma_json as Record<number, Partial<SuperficiesDiente>>);
     }
 
     setLoading(false);
@@ -66,10 +66,10 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
     fetchData();
   }, [fetchData]);
 
-  const handleOdontogramaChange = (diente: number, estado: EstadoDiente) => {
+  const handleOdontogramaChange = (diente: number, superficies: Partial<SuperficiesDiente>) => {
     setOdontograma(prev => ({
       ...prev,
-      [diente]: estado
+      [diente]: superficies
     }));
   };
 
