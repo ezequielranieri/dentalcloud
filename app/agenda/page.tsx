@@ -23,6 +23,7 @@ import BotonWhatsApp from '@/components/BotonWhatsApp'
 import { plantillas, generarLinkEmail } from '@/lib/whatsapp'
 import NuevoTurnoModal from '@/components/NuevoTurnoModal'
 import NotificacionModal from '@/components/NotificacionModal'
+import ResumenPacienteModal from '@/components/ResumenPacienteModal'
 import Calendar from '@/components/Calendar'
 
 export default function AgendaPage() {
@@ -32,6 +33,10 @@ export default function AgendaPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [diasConTurnos, setDiasConTurnos] = useState<string[]>([])
+  
+  // Estados para el resumen del paciente
+  const [pacienteResumen, setPacienteResumen] = useState<Paciente | null>(null)
+  const [isResumenOpen, setIsResumenOpen] = useState(false)
   
   // Estados para el menú y acciones
   const [menuAbiertoId, setMenuAbiertoId] = useState<string | null>(null)
@@ -226,6 +231,12 @@ export default function AgendaPage() {
         initialDate={fecha}
       />
 
+      <ResumenPacienteModal
+        isOpen={isResumenOpen}
+        onClose={() => setIsResumenOpen(false)}
+        paciente={pacienteResumen}
+      />
+
       {notificacion && (
         <NotificacionModal 
           isOpen={notificacion.isOpen}
@@ -307,9 +318,15 @@ export default function AgendaPage() {
             return (
               <div 
                 key={turno.id}
+                onClick={() => {
+                  if (!isEditing && !isRescheduling) {
+                    setPacienteResumen(turno.pacientes)
+                    setIsResumenOpen(true)
+                  }
+                }}
                 className={`
                   bg-white rounded-r-xl border border-gray-200 p-3
-                  flex flex-col gap-3 shadow-sm relative
+                  flex flex-col gap-3 shadow-sm relative transition-all active:scale-[0.99] cursor-pointer hover:border-blue-200
                   border-l-[4px] ${accentClasses[turno.estado]}
                 `}
               >
@@ -328,14 +345,20 @@ export default function AgendaPage() {
                   </div>
                   <div className="relative">
                     <button 
-                      onClick={() => abrirMenu(isMenuOpen ? null : turno.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        abrirMenu(isMenuOpen ? null : turno.id)
+                      }}
                       className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                     >
                       <MoreVertical size={18} />
                     </button>
 
                     {isMenuOpen && (
-                      <div className="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-40 py-1 animate-in fade-in zoom-in duration-150">
+                      <div 
+                        className="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-40 py-1 animate-in fade-in zoom-in duration-150"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <button 
                           onClick={() => {
                             abrirEdicion(turno.id)
@@ -392,7 +415,7 @@ export default function AgendaPage() {
 
                 <div className="pl-13">
                   {isEditing ? (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2" onClick={(e) => e.stopPropagation()}>
                       <textarea
                         value={editMotivo}
                         onChange={(e) => setEditMotivo(e.target.value)}
@@ -415,7 +438,7 @@ export default function AgendaPage() {
                       </div>
                     </div>
                   ) : isRescheduling ? (
-                    <div className="bg-blue-50/50 p-3 rounded-xl border border-blue-100 flex flex-col gap-3">
+                    <div className="bg-blue-50/50 p-3 rounded-xl border border-blue-100 flex flex-col gap-3" onClick={(e) => e.stopPropagation()}>
                       <p className="text-xs font-bold text-blue-700 uppercase tracking-wider">Nueva fecha y hora</p>
                       <div className="grid grid-cols-2 gap-2">
                         <input
@@ -458,16 +481,18 @@ export default function AgendaPage() {
                       )}
 
                       <div className="mt-3 flex items-center gap-2">
-                        <BotonWhatsApp 
-                          telefono={turno.pacientes.telefono}
-                          mensaje={plantillas.recordatorio({
-                            paciente_nombre: turno.pacientes.nombre,
-                            paciente_telefono: turno.pacientes.telefono,
-                            fecha_hora: `${hora} hs`,
-                            motivo: turno.motivo
-                          })}
-                          label="Recordar"
-                        />
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <BotonWhatsApp 
+                            telefono={turno.pacientes.telefono}
+                            mensaje={plantillas.recordatorio({
+                              paciente_nombre: turno.pacientes.nombre,
+                              paciente_telefono: turno.pacientes.telefono,
+                              fecha_hora: `${hora} hs`,
+                              motivo: turno.motivo
+                            })}
+                            label="Recordar"
+                          />
+                        </div>
                         <span className={`
                           ml-auto text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border
                           ${badgeClasses[turno.estado]}
