@@ -20,20 +20,20 @@ export function generarLinkWhatsApp(telefono: string, mensaje: string): string {
 export const plantillas = {
   recordatorio: (turno: TurnoData): string =>
     `Hola ${turno.paciente_nombre} 👋\n\n` +
-    `Te recordamos que tenés un turno hoy:\n` +
+    `Te recordamos que tenés un turno programado:\n` +
     `📅 ${turno.fecha_hora}\n` +
     `📋 ${turno.motivo}\n\n` +
-    `¿Podés confirmar tu asistencia? Respondé este mensaje.`,
+    `✅ ¿Podés confirmar tu asistencia? Respondé este mensaje.`,
 
   reprogramacion: (turno: TurnoData): string =>
     `Hola ${turno.paciente_nombre} 👋\n\n` +
-    `Te informamos que tu turno de hoy (${turno.fecha_hora}) fue reprogramado para:\n` +
+    `Te informamos que tu turno del ${turno.fecha_hora} fue reprogramado para:\n` +
     `📅 ${turno.nueva_fecha_hora}\n\n` +
-    `¡Te esperamos!`,
+    `✅ ¡Te esperamos!`,
 
   cancelacion: (turno: TurnoData): string =>
     `Hola ${turno.paciente_nombre} 👋\n\n` +
-    `Te informamos que tu turno de hoy (${turno.fecha_hora}) fue cancelado.\n\n` +
+    `❌ Te informamos que tu turno del ${turno.fecha_hora} fue cancelado.\n\n` +
     `Por favor, comunicate para coordinar un nuevo horario.`,
 }
 
