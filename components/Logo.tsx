@@ -12,7 +12,7 @@ export default function Logo({ className, size = 24, color = 'currentColor', fil
       viewBox="0 0 24 24"
       fill="none"
       stroke={color}
-      strokeWidth="2"
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       width={size}
@@ -20,11 +20,9 @@ export default function Logo({ className, size = 24, color = 'currentColor', fil
       className={className}
     >
       <path
-        d="M7 12c.5 0 2.5-.4 4-3.5 1 0 3 0 4 3.5 1.5 3 1 5-1 6-2 1-4-.5-4-3-1 2.5-3 4-5 3-2-1-2.5-3-1-6Z"
+        d="M8.5 4C6.5 4 5 5.5 5 8C5 10.5 6 12 7 14C7.5 15.5 8 17 8 19C8 20.1 8.9 21 10 21C11.1 21 12 20.1 12 19V17H13V19C13 20.1 13.9 21 15 21C16.1 21 17 20.1 17 19C17 17 17.5 15.5 18 14C19 12 20 10.5 20 8C20 5.5 18.5 4 16.5 4C14.5 4 13.5 5 12.5 5C11.5 5 10.5 4 8.5 4Z"
         fill={fillColor}
       />
-      <path d="M11 20c-1 1-2 2-4 2-2 0-3-1-3-3s1-2 2-3" />
-      <path d="M13 20c1 1 2 2 4 2 2 0 3-1 3-3s-1-2-2-3" />
     </svg>
   );
 }
