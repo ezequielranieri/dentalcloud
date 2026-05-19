@@ -9,10 +9,10 @@ import {
   Calendar as CalendarIcon, 
   FileText, 
   Stethoscope,
-  Activity,
   CheckCircle2,
   Loader2
 } from 'lucide-react';
+import Logo from '@/components/Logo';
 import Odontograma, { type SuperficiesDiente } from '@/components/Odontograma';
 
 interface PageProps {
@@ -207,7 +207,7 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
           <section className="space-y-4">
             <div className="flex flex-col gap-1">
               <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
-                <Activity size={16} className="text-blue-600" />
+                <Logo size={16} color="#2563EB" fillColor="#2563EB" />
                 Odontograma Visual
               </h2>
               <p className="text-[11px] text-gray-400 font-medium">Tocá cada diente para cambiar su estado</p>
@@ -226,7 +226,7 @@ export default function HistoriaClinicaPage({ params }: PageProps) {
 
           <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 text-sm text-blue-700 flex items-start gap-4">
             <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-              <Activity size={18} className="text-blue-600" />
+              <Logo size={18} color="#2563EB" fillColor="#2563EB" />
             </div>
             <p className="leading-relaxed">
               <strong>Tip:</strong> El odontograma muestra el último estado registrado. Los cambios se guardarán como una nueva sesión.
