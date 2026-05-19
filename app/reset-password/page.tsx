@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Lock, Loader2, AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -148,8 +149,5 @@ export default function ResetPasswordPage() {
         </p>
       </div>
     </div>
-  );
-}
-v>
   );
 }
