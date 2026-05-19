@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Activity, Mail, Lock, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -214,8 +215,5 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
-  );
-}
-v>
   );
 }
