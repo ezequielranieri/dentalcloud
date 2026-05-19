@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { supabase, type Turno, type Paciente } from '@/lib/supabase'
 import { 
   Calendar as CalendarIcon, 
@@ -32,7 +32,24 @@ export default function AgendaPage() {
   const [fecha, setFecha] = useState(new Date())
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const calendarRef = useRef<HTMLDivElement>(null)
   const [diasConTurnos, setDiasConTurnos] = useState<string[]>([])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        setIsCalendarOpen(false)
+      }
+    }
+    if (isCalendarOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('touchstart', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+    }
+  }, [isCalendarOpen])
   
   // Estados para el resumen del paciente
   const [pacienteResumen, setPacienteResumen] = useState<Paciente | null>(null)
@@ -256,7 +273,7 @@ export default function AgendaPage() {
           <ChevronLeft size={20} className="text-gray-600" />
         </button>
         
-        <div className="relative">
+        <div className="relative" ref={calendarRef}>
           <button 
             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
             className={`
@@ -272,10 +289,6 @@ export default function AgendaPage() {
           
           {isCalendarOpen && (
             <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-50">
-              <div 
-                className="fixed inset-0 z-[-1]" 
-                onClick={() => setIsCalendarOpen(false)}
-              />
               <Calendar 
                 selectedDate={fecha}
                 onSelect={(newDate) => {
