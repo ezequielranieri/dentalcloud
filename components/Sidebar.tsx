@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Calendar, Users, LogOut, Code, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import Logo from './Logo';
 
 import { useState, useEffect } from 'react';
 
@@ -105,24 +106,6 @@ export default function Sidebar() {
         >
           {isLoggingOut ? <Loader2 className="animate-spin" size={18} /> : <LogOut size={18} />}
           {isLoggingOut ? 'Cerrando sesión...' : 'Cerrar sesión'}
-        </button>
-      </div>
-
-      <div className="px-6 py-4 mt-auto">
-        <a 
-          href="https://github.com/ezequielranieri" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 text-[10px] text-gray-400 hover:text-gray-600 transition-colors"
-        >
-          <Code size={12} />
-          <span>Desarrollado por Ezequiel Ranieri</span>
-        </a>
-      </div>
-    </aside>
-  );
-}
-ión'}
         </button>
       </div>
 
