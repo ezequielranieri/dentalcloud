@@ -34,6 +34,10 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
+      </head>
       <body className="bg-gray-50 text-gray-900 font-sans">
         <DemoCleanup />
         <div className="flex h-screen overflow-hidden">
