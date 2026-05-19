@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Calendar, Users, Activity, LogOut, Code, Loader2 } from 'lucide-react';
+import { Calendar, Users, LogOut, Code, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 import { useState, useEffect } from 'react';
@@ -56,13 +56,7 @@ export default function Sidebar() {
     <aside className="hidden md:flex md:w-64 flex-col bg-white border-r border-gray-200">
       <Link href="/agenda" className="p-6 flex items-center gap-3 border-b border-gray-100 hover:bg-gray-50 transition-colors">
         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-          <svg 
-            viewBox="0 0 24 24" 
-            className="w-5 h-5 fill-white" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M18.84,7C18.66,4.5 16.71,2.5 14.34,2.5C13,2.5 11.83,3.13 11.23,4.09C10.63,3.13 9.47,2.5 8.13,2.5C5.75,2.5 3.81,4.5 3.63,7C3.5,8.81 4.13,10.5 5.25,11.81L7,19C7,20.1 7.9,21 9,21C10.1,21 11,20.1 11,19V15H11.5V19C11.5,20.1 12.4,21 13.5,21C14.6,21 15.5,20.1 15.5,19L17.25,11.81C18.37,10.5 19,8.81 18.84,7Z" />
-          </svg>
+          <Logo size={20} color="white" fillColor="white" />
         </div>
         <span className="text-lg font-bold text-gray-900 tracking-tight">
           Dental<span className="text-blue-600">Cloud</span>
@@ -111,6 +105,24 @@ export default function Sidebar() {
         >
           {isLoggingOut ? <Loader2 className="animate-spin" size={18} /> : <LogOut size={18} />}
           {isLoggingOut ? 'Cerrando sesión...' : 'Cerrar sesión'}
+        </button>
+      </div>
+
+      <div className="px-6 py-4 mt-auto">
+        <a 
+          href="https://github.com/ezequielranieri" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-[10px] text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          <Code size={12} />
+          <span>Desarrollado por Ezequiel Ranieri</span>
+        </a>
+      </div>
+    </aside>
+  );
+}
+ión'}
         </button>
       </div>
 

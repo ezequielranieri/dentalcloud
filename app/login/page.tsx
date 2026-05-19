@@ -80,7 +80,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-3 shadow-lg shadow-blue-200">
-            <Activity className="text-white" size={28} />
+            <Logo className="text-white" size={28} color="white" fillColor="white" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
             Dental<span className="text-blue-600">Cloud</span>
@@ -214,5 +214,8 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+v>
   );
 }
