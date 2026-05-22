@@ -1,113 +1,99 @@
-# 🦷 DentalCloud Manager
+# 🦷 DentalCloud: High-Performance Patient Management for Modern Practices
 
-> Zero-cost dental practice management software — built for a friend, learned by me.
+A specialized SaaS for dental management built with a focus on real-time scheduling, interactive clinical visual records, and a zero-cost infrastructure.
 
----
+## 🌟 About the Developer
+Hello! I'm **Ezequiel Ranieri**. I am a self-taught developer who discovered the world of programming through curiosity and a passion for building things. Everything I know—from architecture patterns to distributed systems—I've learned on my own through books, technical documentation, videos, and endless hours of practice.
 
-## Why this exists
+I created this project to consolidate and demonstrate my understanding of software development. I don't claim to be a senior architect; I am a dedicated learner who enjoys solving complex technical challenges and building robust software that works under pressure.
 
-A dentist friend told me he was managing his appointment schedule on paper and sending WhatsApp reminders one by one, manually. He couldn't afford dental management software, and the existing solutions are either expensive or way too complex for a small practice.
-
-So I built one.
-
-This project is also my first real dive into full-stack JavaScript development. I come from the Python world — backend, APIs, security tools. Next.js, TypeScript and Supabase were new territory for me. I approached it the same way I approach everything: learning while building something that actually makes sense in the real world.
-
----
-
-## What it does
-
-- **Daily schedule** — appointment view with date navigation, status management (pending / confirmed / cancelled) and real-time updates
-- **Patient management** — full patient profile with contact info, health insurance and medical alerts
-- **Clinical records** — session logging with an interactive visual odontogram (32 teeth, FDI system)
-- **WhatsApp reminders** — dynamic `wa.me` link generation with pre-filled messages, no API or extra cost
-- **Authentication** — secure login with Supabase Auth and middleware-protected routes
-
-Everything runs on the free tiers of Supabase and Vercel. Monthly maintenance cost: $0.
+**Contact:**
+- **Email:** ez.ranieri@gmail.com
+- **GitHub:** https://github.com/ezequielranieri
+- **LinkedIn:** https://www.linkedin.com/in/ezequielranieri/
 
 ---
 
-## Stack
+## 🎯 Why this project?
+I built this project to bridge the gap between complex, expensive dental software and the manual paper-based systems many small practices still use. My technical goal was to explore the synergy between Next.js 16's App Router and Supabase, specifically focusing on how to manage complex relational data like clinical histories and interactive SVG states (the Odontogram) while maintaining a strict, cookie-based authentication flow at the edge.
 
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js 14 (App Router) + TypeScript |
-| Styles | Tailwind CSS |
-| Database | PostgreSQL via Supabase |
-| Auth | Supabase Auth |
-| Deploy | Vercel |
+## 🏗 System Architecture / Data Flow
+My architecture focuses on data integrity and real-time updates using a modern full-stack approach:
+
+1.  **Session Security**: A custom middleware intercepts requests at the edge to validate Supabase Auth sessions before rendering any protected routes.
+2.  **State Orchestration**: The App Router handles the hierarchy of patients and their histories, passing IDs down to specialized client components.
+3.  **Visual Interaction**: An SVG-based Odontogram component manages local state for 32 teeth across multiple surfaces, synchronizing changes to a JSONB field in PostgreSQL.
+4.  **Backend Integration**: Supabase provides the PostgreSQL backbone, utilizing Row Level Security (RLS) to ensure that even with an "anon" key, data remains isolated and secure.
+5.  **External Integration**: I implemented a lightweight WhatsApp integration that generates dynamic `wa.me` links for instant patient notifications without the overhead of a paid API.
+
+```mermaid
+graph TD
+    User((User/Dentist)) -->|Interacts| FE[Frontend Next.js]
+    FE -->|Auth / Cookies| MW[Middleware Edge]
+    MW -->|Verifies Session| SB_Auth[Supabase Auth]
+    FE -->|Queries / Mutations| SB_DB[(PostgreSQL)]
+    SB_DB -->|JSONB| ODO[Odontogram Data]
+    FE -->|Generates| WA_Link[WhatsApp Link]
+    WA_Link -->|Redirects| WA_App((WhatsApp Web/App))
+```
+
+## 🛠 Tech Stack
+- **Next.js 16**: My core framework for server-side rendering, routing, and API orchestration.
+- **React 19**: Used for building the interactive UI and managing complex component lifecycles.
+- **Supabase**: My Backend-as-a-Service for real-time PostgreSQL, Authentication, and RLS.
+- **Tailwind CSS 4**: For high-performance, utility-first styling using modern CSS variables.
+- **TypeScript**: The foundation of my codebase, ensuring type safety across the entire domain.
+- **Lucide React**: My choice for a clean, consistent, and lightweight icon system.
 
 ---
 
-## Project structure
+## 🚀 Quick Start Guide
+To get this running on your local machine:
 
-```
-/app                → pages and routes (App Router)
-/components         → reusable components
-/components/ui      → base UI components
-/lib/supabase.ts    → centralized Supabase client
-/types              → domain TypeScript types
-/hooks              → custom hooks
-```
+### Prerequisites
+- Node.js (Latest LTS recommended)
+- A Supabase account and project
 
----
+### Setup
+1.  **Clone and Install**:
+    ```bash
+    git clone https://github.com/ezequielranieri/dentalcloud
+    cd dentalcloud
+    npm install
+    ```
+2.  **Environment Variables**: Create a `.env.local` file in the root:
+    ```env
+    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+    ```
+3.  **Database Migration**: Run the SQL scripts found in `supabase/migrations/` in your Supabase SQL Editor to set up the tables and RLS policies.
 
-## Data model
-
-```sql
-patients           → id, name, phone, health_insurance, alerts, created_at
-appointments       → id, patient_id, datetime, reason, status, created_at
-clinical_records   → id, patient_id, date, description, odontogram_json, created_at
-```
-
-The odontogram is stored as `JSONB` in PostgreSQL — flexible and schema-free.
-
----
-
-## Running locally
-
-```bash
-git clone https://github.com/ezequielranieri/dentalcloud
-cd dentalcloud
-npm install
-```
-
-Create a `.env.local` file in the root:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-```
-
-Run the SQL migrations in Supabase and start the dev server:
-
+### Run
 ```bash
 npm run dev
 ```
 
----
-
-## What I learned
-
-I came from pure Python. This project forced me to understand React's mental model, Next.js 14's App Router, how server-side cookie-based authentication works, and how to design an interface that actually works on a dentist's phone in the middle of a consultation.
-
-It's not perfect. There are things I'd do differently today. But it works, it solves a real problem, and it taught me more than any course ever could.
-
----
-
-## Status
-
-Actively used in a dental practice in Santa Fe, Argentina.
+## 💡 Usage / Endpoints
+The application is designed as a centralized dashboard:
+*   **/agenda**: The primary workspace for daily appointment management and status tracking.
+*   **/pacientes**: A searchable directory of all registered patients and their contact details.
+*   **/pacientes/[id]/historia**: A specialized editor where I can log new clinical sessions and update the visual Odontogram state.
+*   **/login**: Secure entry point managed via Supabase SSR.
 
 ---
 
-## License
+## 🧠 What I Learned
+Developing this project was a significant milestone in my transition to full-stack JavaScript. I mastered the mental model of React's "lifting state up" and the intricacies of Next.js middleware for secure, cookie-based authentication.
 
-MIT — do whatever you want with the code.
+However, reviewing the code today with a more mature perspective, I've identified several areas for improvement:
+*   **Data Fetching Strategy**: I relied heavily on client-side fetching within `useEffect` hooks. Today, I would refactor this to use **Server Components** for initial data loading to improve SEO and drastically reduce the "loading spinner" phase.
+*   **State Coupling**: The business logic for calculating tooth surfaces is tightly coupled with the UI in `Odontograma.tsx`. I would now extract this into a custom `useOdontogram` hook or a pure utility library to make it testable and reusable.
+*   **Error Boundaries**: My current error handling is somewhat silent (logging to the console). I would implement a robust **Toast notification system** and React Error Boundaries to provide a better user experience when network issues occur.
+*   **Type Centralization**: I noticed some type duplication between my library files and components. I would consolidate all domain models into a single `/types` directory to ensure a single source of truth.
 
----
+## 🗺 Roadmap
+- [ ] Migrate `fetchData` logic to Next.js Server Actions for better security and performance.
+- [ ] Implement a "Financial Module" to track payments and pending balances per patient.
+- [ ] Add support for uploading and viewing dental X-rays (DICOM/Images) using Supabase Storage.
 
-<p align="center">
-  Built by <a href="https://github.com/ezequielranieri">Ezequiel Ranieri</a> — Santa Fe, Argentina
-  <br>
-  <sub>Self-taught. I solve real problems with code.</sub>
-</p>
+Thank you for checking out my work! I'm always open to feedback and looking for new opportunities to learn and grow.
